@@ -2,7 +2,7 @@
 /*
 Plugin Name: Organizational message notifier
 Description: Allows network admin to send organizational messages to blog admins. Includes read confirmation.
-Version: 1.5.1
+Version: 1.5.2
 Author: Zaantar
 Author URI: http://zaantar.eu
 Donate Link: http://zaantar.eu/index.php?page=Donate
@@ -28,12 +28,10 @@ License: GPL2
 */
 
 
-// TODO settings page; donate link, move wls settings here
-// TODO option to notify admins or all users or selected users
-
 require_once plugin_dir_path( __FILE__ ).'includes/overview.php';
 require_once plugin_dir_path( __FILE__ ).'includes/notification.php';
 require_once plugin_dir_path( __FILE__ ).'includes/database.php';
+require_once plugin_dir_path( __FILE__ ).'includes/settings.php';
 
 register_activation_hook( __FILE__,'omn_plugin_activation' );
 
@@ -63,15 +61,37 @@ function omn_load_textdomain() {
 add_action( 'network_admin_menu','omn_network_admin_menu' );
 
 function omn_network_admin_menu() {
-	add_submenu_page( 'index.php', __( 'Organizational messages', OMN_TEXTDOMAIN ), __( 'Organizational messages', OMN_TEXTDOMAIN ), 'manage_network_options', 
-		'omn-superadmin-overview', 'omn_superadmin_overview_page' );
+	add_submenu_page( 
+		'index.php', 
+		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
+		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
+		'manage_network_options', 
+		'omn-superadmin-overview', 
+		'omn_superadmin_overview_page' 
+	);
+	add_submenu_page( 
+		'settings.php', 
+		__( 'Organizational Message Notifier', OMN_TEXTDOMAIN ), 
+		__( 'Organizational Message Notifier', OMN_TEXTDOMAIN ), 
+		'manage_network_options', 
+		'omn-settings',
+		'omn_settings_page'
+	);
+
 }
 
 add_action( 'admin_menu','omn_admin_menu' );
 
 function omn_admin_menu() {
-	add_submenu_page( 'index.php', __( 'Organizational messages', OMN_TEXTDOMAIN ), __( 'Organizational messages', OMN_TEXTDOMAIN ), 'manage_options', 
-		'omn-messages', 'omn_messages_page' );
+	extract( omn_get_settings() );
+	add_submenu_page( 
+		'index.php', 
+		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
+		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
+		$minimal_capability, 
+		'omn-messages', 
+		'omn_messages_page' 
+	);
 }
 
 

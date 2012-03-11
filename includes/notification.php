@@ -10,8 +10,11 @@ add_action( 'admin_notices','omn_admin_notices' );
 function omn_admin_notices() {
 	$count = omn_unread_count();
 	if( $count > 0 ) {
-		$url = omn_get_messages_page_link( get_current_user_id() );
-		omn_nag( sprintf( __( '%sYou have %d unread messages%s concerning blog operation. For reading them continue, please, %shere%s.', OMN_TEXTDOMAIN ), '<strong>', $count, '</strong>', '<a href="'.$url.'">', '</a>.' ) );
+		extract( omn_get_settings() );
+		if( current_user_can( $minimal_capability ) ) {
+			$url = omn_get_messages_page_link( get_current_user_id() );
+			omn_nag( sprintf( __( '%sYou have %d unread messages%s concerning blog operation. For reading them continue, please, %shere%s.', OMN_TEXTDOMAIN ), '<strong>', $count, '</strong>', '<a href="'.$url.'">', '</a>.' ) );
+		}
 	}
 }
 
@@ -32,11 +35,14 @@ function omn_admin_bar_menu() {
     global $wp_admin_bar;
 	$count = omn_unread_count();
 	if( $count > 0 ) {
-		$wp_admin_bar->add_menu( array( 
-			'id' => 'omn-notice',
-			'title' => sprintf( __( 'You have %d unread messages! Click here to read them.', OMN_TEXTDOMAIN ), $count ),
-			'href' => omn_get_messages_page_link( get_current_user_id() )
-		) );
+		extract( omn_get_settings() );
+		if( current_user_can( $minimal_capability ) ) {
+			$wp_admin_bar->add_menu( array( 
+				'id' => 'omn-notice',
+				'title' => sprintf( __( 'You have %d unread messages! Click here to read them.', OMN_TEXTDOMAIN ), $count ),
+				'href' => omn_get_messages_page_link( get_current_user_id() )
+			) );
+		}
 	}
 }
 
@@ -61,9 +67,6 @@ function omn_messages_page() {
 	}
 }
 
-// TODO OMN_TEXTDOMAIN
-/*  <?php _e( '', OMN_TEXTDOMAIN ); ?>
-*/
 
 function omn_messages_page_default( $show = 'unread' ) {
 	omn_log( 'visiting message list.' );

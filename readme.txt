@@ -4,7 +4,7 @@ Tags: superadmin, multisite, organization, organizational, message
 Donate link: http://zaantar.eu/index.php?page=Donate
 Requires at least: 3.1
 Tested up to: 3.3.1
-Stable tag: 1.5.1
+Stable tag: 1.5.2
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -28,6 +28,11 @@ Developed for private use, but has perspective for more extensive usage. I can't
 No questions yet.
 
 == Changelog ==
+
+= 1.5.2 =
+* settings page; donate link, moved wls settings here
+* option to notify admins or all users or selected users
+* adujstable minimal capability to show messages
 
 = 1.5.1 =
 * fixed register_activation_hook

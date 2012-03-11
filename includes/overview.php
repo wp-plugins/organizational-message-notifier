@@ -4,7 +4,6 @@
 	SUPERADMIN OVERVIEW
 \* ************************************************************************* */
 
-// TODO chybejici uzivatele v omn_get_blog_owners (napr. pierre)
 
 function omn_superadmin_overview_page() {
 
@@ -26,45 +25,17 @@ function omn_superadmin_overview_page() {
     	omn_delete_notifications( $_GET['id'] );
     	omn_superadmin_overview_page_default();
     	break;
-	case 'wls-register':
-    	$ok = wls_register( OMN_LOGNAME, __( 'Organizational Message Notifier events.', OMN_TEXTDOMAIN ) );
-    	if( $ok ) {
-    		$info = __( 'Successfully registered with WLS', OMN_TEXTDOMAIN );
-    		omn_nag( $info );
-    		omn_log( $info, 2 );
-    	} else {
-    		$info = __( 'Error while registering with WLS.', OMN_TEXTDOMAIN );
-    		omn_nagerr( $info );
-    		omn_log( $info, WLS_ERROR );
-    	}
-    	omn_superadmin_overview_page_default();
-    	break;
-    case 'wls-unregister':
-    	$ok = wls_unregister( OMN_LOGNAME );
-    	if( $ok ) {
-    		$info = __( 'Successfully unregistered from WLS, log entries deleted.', OMN_TEXTDOMAIN );
-    		omn_nag( $info );
-    		omn_log( $info, 2 );
-    	} else {
-    		$info = __( 'Errrr while unregistering from WLS.', OMN_TEXTDOMAIN );
-    		omn_nagerr( $info );
-    		omn_log( $info, WLS_ERROR );
-    	}
-    	omn_superadmin_overview_page_default();
-    	break;    
     default:
     	omn_superadmin_overview_page_default();
     	break;
     }
 }
 
-/* 
-<?php _e( '', OMN_TEXTDOMAIN ); ?>
-__( , OMN_TEXTDOMAIN )
-*/
+
 function omn_superadmin_overview_page_default() {
 
 	$messages = omn_get_messages();
+	extract( omn_get_settings() );
 	
 	?>
 	<div class="wrap">
@@ -150,40 +121,22 @@ function omn_superadmin_overview_page_default() {
             		<th><?php _e( 'Content', OMN_TEXTDOMAIN ); ?></th>
             		<td><textarea name="text" rows="15" cols="60"></textarea></td>
             	</tr>
+            	<tr>
+            		<th><?php _e( 'Target', OMN_TEXTDOMAIN ); ?></th>
+            		<td>
+                		<input type="radio" name="target" value="admins" <?php if( $default_target == 'admins' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Administrators of currently active blogs', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="target" value="all_users" <?php if( $default_target == 'all_users' ) echo 'checked'; ?> />&nbsp;<?php _e( 'All users in the network', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="target" value="specific" <?php if( $default_target == 'specific' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Specific users: ', OMN_TEXTDOMAIN ); ?>&nbsp;<input type="text" name="specific_users_ids" value="<?php echo $specific_users_ids; ?>" />
+                	</td>
+                	<td><small><?php _e( 'If the "Specific users" option is checked, enter their ID\'s separated by commas.', OMN_TEXTDOMAIN ); ?></small></td>
+            		</td>
+            	</tr>
             </table>
             <p class="submit">
 	            <input type="submit" class="button-primary" value="<?php _e( 'Create', OMN_TEXTDOMAIN ); ?>" />    
 	        </p>
 		</form>
-		<?php
-			if( defined( 'WLS' ) ) {
-				?>			 
-				<h3><?php _e( 'Registration with WLS', SUH_TEXTDOMAIN ); ?></h3>
-		    	<p><?php _e( 'Wordpress Logging Service was detected.', SUH_TEXTDOMAIN ); ?></p>
-	    		<?php
-	    			if( !wls_is_registered( 'suh-log' ) or !wls_is_registered( 'suh-mail' ) ) {
-	    				?>
-						<form method="post"">
-							<input type="hidden" name="action" value="wls-register" />
-							<p class="submit">
-								<input type="submit" value="<?php _e( 'Register with WLS', SUH_TEXTDOMAIN ); ?>" />    
-							</p> 
-						</form>
-						<?php
-					} else {
-						?>
-						<form method="post">
-							<input type="hidden" name="action" value="wls-unregister" />
-							<p class="submit">
-								<input type="submit" style="color:red;" value="<?php _e( 'Unregister from WLS and delete log entries', SUH_TEXTDOMAIN ); ?>" />    
-							</p> 
-						</form>
-						<?php
-					}
-				?>
-				<?php
-        	} 
-        ?>	</div>
+	</div>
 	<?php
 
 }
@@ -191,7 +144,25 @@ function omn_superadmin_overview_page_default() {
 
 
 function omn_superadmin_overview_page_add() {
-	$ok = omn_create_message( $_REQUEST['title'], $_REQUEST['text'], $_REQUEST['link'], get_current_user_id() );
+	$target_ids = array();
+	switch( $_POST['target'] ) {
+	case 'admins':
+		// vytvoříme seznam vlastníků blogů (toť uživatelé, kteří mají zprávu číst)
+		$target_ids = omn_get_blog_owners();
+		omn_log( 'adding target (blog owners): '.print_r( $target_ids, true ), 1 );
+		break;
+	case 'all_users':
+		global $wpdb;
+		$target_ids = $wpdb->get_col( 'SELECT ID FROM '.$wpdb->users );
+		omn_log( 'adding target (all users): '.print_r( $target_ids, true ), 1 );
+		break;
+	case 'specific':
+		$target_ids = explode( ',', $_POST['specific_users_ids'] );
+		omn_log( 'adding target (specific): '.print_r( $target_ids, true ), 1 );
+		break;
+	}
+		
+	$ok = omn_create_message( $_REQUEST['title'], $_REQUEST['text'], $_REQUEST['link'], get_current_user_id(), $target_ids );
 	if( $ok ) {
 		omn_nag( 'Zpráva byla úspěšně přidána.' );
 	} else {
@@ -227,7 +198,7 @@ function omn_delete_notifications( $message_id ) {
 
 
 // přidá zprávu dle zadaných parametrů a vrátí true, pokud uspěje, jinak false.
-function omn_create_message( $title, $text, $link, $author_id ) {
+function omn_create_message( $title, $text, $link, $author_id, $target_ids ) {
 	global $wpdb;
 
 	// přidáme záznam do databáze
@@ -243,14 +214,10 @@ function omn_create_message( $title, $text, $link, $author_id ) {
 		omn_log( 'error adding new message into the database.', 4 );
 	}
 	
-	// vytvoříme seznam vlastníků blogů (toť uživatelé, kteří mají zprávu číst)
-	$owners = omn_get_blog_owners();
-	omn_log( 'adding target (blog owners): '.print_r( $owners, TRUE ) );
-	
 	// přidáme cílové uživatele do unread
-	foreach( $owners as $owner ) {
+	foreach( $target_ids as $target_id ) {
 		$wpdb->insert( $wpdb->base_prefix.'omn_unread',
-			array( 'message_id' => $message_id, 'user_id' => $owner ),
+			array( 'message_id' => $message_id, 'user_id' => $target_id ),
 			array( '%d', '%d' )
 		);
 	}
