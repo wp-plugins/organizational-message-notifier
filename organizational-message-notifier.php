@@ -2,7 +2,7 @@
 /*
 Plugin Name: Organizational message notifier
 Description: Allows network admin to send organizational messages to blog admins. Includes read confirmation.
-Version: 1.5
+Version: 1.5.1
 Author: Zaantar
 Author URI: http://zaantar.eu
 Donate Link: http://zaantar.eu/index.php?page=Donate
@@ -29,10 +29,13 @@ License: GPL2
 
 
 // TODO settings page; donate link, move wls settings here
+// TODO option to notify admins or all users or selected users
 
 require_once plugin_dir_path( __FILE__ ).'includes/overview.php';
 require_once plugin_dir_path( __FILE__ ).'includes/notification.php';
 require_once plugin_dir_path( __FILE__ ).'includes/database.php';
+
+register_activation_hook( __FILE__,'omn_plugin_activation' );
 
 
 /*****************************************************************************\

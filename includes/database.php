@@ -5,7 +5,6 @@
 	INSTALLATION
 \* ************************************************************************* */
 
-register_activation_hook( __FILE__,'omn_plugin_activation' );
 
 function omn_plugin_activation() {
 	global $wpdb;
