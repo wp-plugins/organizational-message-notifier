@@ -121,4 +121,32 @@ function omn_read_message( $message_id ) {
 	omn_log( 'marking message '.$message_id.' as read.', 2 );
 }
 
+
+function omn_delete_notification( $user_id, $message_id ) {
+	global $wpdb;
+	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
+		WHERE (
+			message_id='.$message_id.'
+			AND user_id='.$user_id.'
+		)';
+	$wpdb->query( $wpdb->prepare( $query ) );
+}
+
+
+function omn_delete_notifications( $message_id ) {
+	global $wpdb;
+	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
+		WHERE message_id='.$message_id;
+	$wpdb->query( $wpdb->prepare( $query ) );
+	omn_log( 'Deleting all notifications for message '.$message_id.'.', 3 );
+}
+
+
+function omn_delete_message( $message_id ) {
+	global $wpdb;
+	omn_log( 'Deleting message '.$message_id.'.', 3 );
+	$wpdb->query( $wpdb->prepare( 'DELETE FROM '.omn_messages_table().' WHERE id = %d', $message_id ) );
+	omn_delete_notifications( $message_id );
+}
+
 ?>

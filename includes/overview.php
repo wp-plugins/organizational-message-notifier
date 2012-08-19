@@ -25,6 +25,10 @@ function omn_superadmin_overview_page() {
     	omn_delete_notifications( $_GET['id'] );
     	omn_superadmin_overview_page_default();
     	break;
+    case 'delete-message':
+    	omn_delete_message( $_GET['id'] );
+    	omn_superadmin_overview_page_default();
+    	break;
     default:
     	omn_superadmin_overview_page_default();
     	break;
@@ -91,10 +95,11 @@ function omn_superadmin_overview_page_default() {
 							<?php
 								if( $unread_count > 0 ) {
 									?>
-									<a href="index.php?page=omn-superadmin-overview&action=expire-message&id=<?php echo $message->id; ?>"><small>ex</small></a>
+									<a href="index.php?page=omn-superadmin-overview&action=expire-message&id=<?php echo $message->id; ?>"><small>ex</small></a><br />
 									<?php
 								}
 							?>
+							<a href="index.php?page=omn-superadmin-overview&action=delete-message&id=<?php echo $message->id; ?>"><small>&times;</small></a>
 						</td>
 						<td><strong><?php echo $title; ?></strong></td>
 						<td><?php echo $authordata->user_login.'<br />'.$message->date; ?></td>
@@ -171,25 +176,6 @@ function omn_superadmin_overview_page_add() {
 	omn_superadmin_overview_page_default();
 }
 
-
-function omn_delete_notification( $user_id, $message_id ) {
-	global $wpdb;
-	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
-		WHERE (
-			message_id='.$message_id.'
-			AND user_id='.$user_id.'
-		)';
-	$wpdb->query( $wpdb->prepare( $query ) );
-}
-
-
-function omn_delete_notifications( $message_id ) {
-	global $wpdb;
-	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
-		WHERE message_id='.$message_id;
-	$wpdb->query( $wpdb->prepare( $query ) );
-	omn_log( 'Deleting all notifications for message '.$message_id.'.', 3 );
-}
 
 
 /* ************************************************************************* *\

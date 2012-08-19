@@ -1,10 +1,12 @@
 === Organizational Message Notifier ===
 Contributors: zaantar
 Tags: superadmin, multisite, organization, organizational, message
-Donate link: http://zaantar.eu/index.php?page=Donate
+Donate link: http://zaantar.eu/financni-prispevek
+Author URI: http://zaantar.eu
+Plugin URI: http://wordpress.org/extend/plugins/organizational-message-notifier
 Requires at least: 3.1
-Tested up to: 3.3.1
-Stable tag: 1.5.2
+Tested up to: 3.4.1
+Stable tag: 1.5.3
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -21,13 +23,16 @@ Main features:
 
 Makes use of the Wordpress Logging Service.
 
-Developed for private use, but has perspective for more extensive usage. I can't guarantee any support in the future nor further development, but it is to be expected. Kindly inform me about bugs, if you find any, or propose new features: zaantar@zaantar.eu.
+Developed for private use, but has perspective for more extensive usage. I can't guarantee any support in the future nor further development, but it is to be expected. Kindly inform me about bugs, if you find any, or propose new features: [zaantar@zaantar.eu](mailto:zaantar@zaantar.eu?subject=[organizational-message-notifier]).
 
 == Frequently Asked Questions ==
 
 No questions yet.
 
 == Changelog ==
+
+= 1.5.3 =
+* possibility to delete a message
 
 = 1.5.2 =
 * settings page; donate link, moved wls settings here
