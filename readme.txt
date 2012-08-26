@@ -6,7 +6,7 @@ Author URI: http://zaantar.eu
 Plugin URI: http://wordpress.org/extend/plugins/organizational-message-notifier
 Requires at least: 3.1
 Tested up to: 3.4.1
-Stable tag: 1.5.3
+Stable tag: 1.5.4
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -30,6 +30,9 @@ Developed for private use, but has perspective for more extensive usage. I can't
 No questions yet.
 
 == Changelog ==
+
+= 1.5.4 =
+* new feature: e-mail user notification
 
 = 1.5.3 =
 * possibility to delete a message

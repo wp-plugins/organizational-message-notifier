@@ -185,6 +185,9 @@ function omn_superadmin_overview_page_add() {
 
 // přidá zprávu dle zadaných parametrů a vrátí true, pokud uspěje, jinak false.
 function omn_create_message( $title, $text, $link, $author_id, $target_ids ) {
+
+	extract( omn_get_settings() );
+
 	global $wpdb;
 
 	// přidáme záznam do databáze
@@ -206,6 +209,21 @@ function omn_create_message( $title, $text, $link, $author_id, $target_ids ) {
 			array( 'message_id' => $message_id, 'user_id' => $target_id ),
 			array( '%d', '%d' )
 		);
+	}
+	
+	// pokud je zapnuto upozorňování mailem, rozešleme zprávy.
+	if( $mail_notification["enabled"] ) {
+		$addresses = array();
+		foreach( $target_ids as $target_id ) {
+			$user_data = get_userdata( $target_id );
+			$addresses[] = $user_data->user_email;
+		}
+		/*$headers = array();
+		foreach( $addresses as $address ) {
+			$headers[] = "Bcc: $address";
+		}*/
+		$ret = wp_mail( /*get_bloginfo( "admin_email" )*/ $addresses, $mail_notification["subject"], $mail_notification["message"] );
+		omn_log( "Sending e-mail messages to target users: ".implode( ", ", $addresses )." (success: \"$ret\")." );
 	}
 	
 	// hotovo

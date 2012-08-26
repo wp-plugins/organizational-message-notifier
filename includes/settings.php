@@ -14,7 +14,12 @@ function omn_get_settings() {
 		'default_target' => 'admins',
 		'specific_users_ids' => '',
 		'minimal_capability' => 'manage_options',
-		'hide_donation_button' => false
+		'hide_donation_button' => false,
+		"mail_notification" => array(
+			"enabled" => false,
+			"subject" => "subject",
+			"message" => "message"
+		)
 	);
 	
 	$settings = get_site_option( OMN_SETTINGS, array() );
@@ -24,6 +29,7 @@ function omn_get_settings() {
 
 
 function omn_update_settings( $settings ) {
+	$settings["mail_notification"]["enabled"] = isset( $settings["mail_notification"]["enabled"] );
 	update_site_option( OMN_SETTINGS, $settings );
 }
 
@@ -124,8 +130,8 @@ function omn_settings_page_default() {
 				<?php
         	} 
         ?>
-        <h3><?php _e( 'Basic settings', OMN_TEXTDOMAIN ); ?></h3>
         <form method="post">
+        	<h3><?php _e( 'Basic settings', OMN_TEXTDOMAIN ); ?></h3>
             <input type="hidden" name="action" value="update-settings" />
            	<table class="form-table">
            		<tr valign="top">
@@ -165,6 +171,29 @@ function omn_settings_page_default() {
                 	<td><small><?php _e( 'If you don\'t want to be bothered again...', OMN_TEXTDOMAIN ); ?></small></td>
                 </tr>
            	</table>
+           	<h3><?php _e( 'E-mail notification', OMN_TEXTDOMAIN ); ?></h3>
+           	<table class="form-table">
+				<tr valign="top">
+                	<th>
+                		<label><?php _e( 'Enable e-mail notification', OMN_TEXTDOMAIN ); ?></label><br />
+                	</th>
+                	<td>
+                		<input type="checkbox" name="settings[mail_notification][enabled]" <?php checked( $mail_notification["enabled"] ); ?> />
+                	</td>
+                </tr>
+                <tr valign="top">
+                	<th>
+                		<label><?php _e( "Template", OMN_TXD ); ?></label>
+                	</th>
+                	<td>
+                		<label><?php _e( "Subject", OMN_TXD ); ?>: </label>
+                		<input type="text" name="settings[mail_notification][subject]" value="<?php echo esc_attr( $mail_notification["subject"] ); ?>" /><br />
+                		<textarea name="settings[mail_notification][message]" rows="5" cols="50"><?php
+                			echo esc_textarea( $mail_notification["message"] );
+                		?></textarea>
+                	</td>
+                </tr>
+			</table>        	
 			<p class="submit">
 	            <input type="submit" class="button-primary" value="<?php _e( 'Save', OMN_TEXTDOMAIN ); ?>" />    
 	        </p>
