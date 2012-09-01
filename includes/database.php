@@ -51,9 +51,9 @@ function omn_unread_table() {
 }
 
 
-function omn_get_messages() {
+function omn_get_messages( $orderby = "date", $order = "DESC") {
 	global $wpdb;
-	$results = $wpdb->get_results( 'SELECT * FROM '.omn_messages_table().' ORDER BY date DESC' );
+	$results = $wpdb->get_results( 'SELECT * FROM '.omn_messages_table()." ORDER BY $orderby $order" );
 	return $results;
 }
 
@@ -108,6 +108,13 @@ function omn_get_nonreading_users( $message_id ) {
 		$message_id 
 	) );
 }
+
+
+function omn_get_nonreading_user_count( $message_id ) {
+	global $wpdb;
+	return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM ".omn_unread_table()." WHERE message_id = %d", $message_id ) );
+}
+
 
 function omn_read_message( $message_id ) {
 	global $wpdb;

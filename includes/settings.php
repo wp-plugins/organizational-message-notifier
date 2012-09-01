@@ -139,9 +139,10 @@ function omn_settings_page_default() {
                 		<label><?php _e( 'Default message target', OMN_TEXTDOMAIN ); ?></label><br />
                 	</th>
                 	<td>
-                		<input type="radio" name="settings[default_target]" value="admins" <?php if( $default_target == 'admins' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Administrators of currently active blogs', OMN_TEXTDOMAIN ); ?><br />
-                		<input type="radio" name="settings[default_target]" value="all_users" <?php if( $default_target == 'all_users' ) echo 'checked'; ?> />&nbsp;<?php _e( 'All users in the network', OMN_TEXTDOMAIN ); ?><br />
-                		<input type="radio" name="settings[default_target]" value="specific" <?php if( $default_target == 'specific' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Specific users: ', OMN_TEXTDOMAIN ); ?>&nbsp;<input type="text" name="settings[specific_users_ids]" value="<?php echo $specific_users_ids; ?>" />
+                		<input type="radio" name="settings[default_target]" value="admins" <?php checked( $default_target, 'admins' ); ?> />&nbsp;<?php _e( 'Administrators of currently active blogs', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="settings[default_target]" value="admins_by_admin_email" <?php checked( $default_target, 'admins_by_admin_email' ); ?> />&nbsp;<?php _e( 'Administrators of blogs (by admin e-mail address)', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="settings[default_target]" value="all_users" <?php checked( $default_target, 'all_users' ); ?> />&nbsp;<?php _e( 'All users in the network', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="settings[default_target]" value="specific" <?php checked( $default_target, 'specific' ); ?> />&nbsp;<?php _e( 'Specific users: ', OMN_TEXTDOMAIN ); ?>&nbsp;<input type="text" name="settings[specific_users_ids]" value="<?php echo $specific_users_ids; ?>" />
                 	</td>
                 	<td>
                 		<small>

@@ -41,75 +41,16 @@ function omn_superadmin_overview_page_default() {
 	$messages = omn_get_messages();
 	extract( omn_get_settings() );
 	
+	$table = new OrganizationalMessageNotifier_Overview_Table();
+	$table->prepare_items();
+	
 	?>
 	<div class="wrap">
-		<h2><?php _e( 'Organizational messages', OMN_TEXTDOMAIN ); ?></h2>
-		<table class="widefat" cellspacing="0">
-		    <thead>
-		        <tr>
-		            <th scope="col" class="manage-column"><?php _e( 'id', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Message', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Author', OMN_TEXTDOMAIN ); ?><br /><?php _e( 'Date', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Content', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Have not read yet', OMN_TEXTDOMAIN ); ?></th>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr>
-		            <th scope="col" class="manage-column"><?php _e( 'id', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Message', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Author', OMN_TEXTDOMAIN ); ?><br /><?php _e( 'Date', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Content', OMN_TEXTDOMAIN ); ?></th>
-		            <th scope="col" class="manage-column"><?php _e( 'Have not read yet', OMN_TEXTDOMAIN ); ?></th>
-				</tr>
-			</tfoot>
-			<?php
-				foreach( $messages as $message ) {
-					$nonreading_users = omn_get_nonreading_users( $message->id );
-					$unread_string = '';
-					$unread_count = 0;
-					foreach( $nonreading_users as $nonreading_user_id ) {
-						$userdata = get_userdata( $nonreading_user_id );
-						if( !empty( $unread_string ) ) {
-							$unread_string .= ', ';
-						}
-						$unread_string .= $userdata->user_login.' <a href="index.php?page=omn-superadmin-overview&action=delete-notification&user='.$nonreading_user_id.'&message='.$message->id.'">&times;</a>';
-						$unread_count++;
-					}
-					if( $unread_count > 0 ) {
-						$unread_string = $unread_count.': '.$unread_string;
-					} else {
-						$unread_string = __( '(has been read by everyone)', OMN_TEXTDOMAIN );
-					}
-					$authordata = get_userdata( $message->author );
-					if( !empty( $message->link ) ) {
-						$title = '<a href="'.$message->link.'">'.$message->title.'</a>';
-					} else {
-						$title = $message->title;
-					}
-					$text = stripslashes( do_shortcode( $message->text ) );
-					?>
-					<tr>
-						<td>
-							<?php echo $message->id; ?><br />
-							<?php
-								if( $unread_count > 0 ) {
-									?>
-									<a href="index.php?page=omn-superadmin-overview&action=expire-message&id=<?php echo $message->id; ?>"><small>ex</small></a><br />
-									<?php
-								}
-							?>
-							<a href="index.php?page=omn-superadmin-overview&action=delete-message&id=<?php echo $message->id; ?>"><small>&times;</small></a>
-						</td>
-						<td><strong><?php echo $title; ?></strong></td>
-						<td><?php echo $authordata->user_login.'<br />'.$message->date; ?></td>
-						<td><?php echo $text; ?></td>
-						<td><?php echo $unread_string; ?></td>
-					</tr>
-					<?php
-				}
-			?>
-		</table>
+		<h2><?php _e( 'Organizational messages', OMN_TEXTDOMAIN ); ?></h2> 
+		<form method="get">
+            <input type="hidden" name="page" value="<?php echo $_REQUEST['page'] ?>" />
+            <?php $table->display(); ?>
+        </form>
 		<h3><?php _e( 'Create new message', OMN_TEXTDOMAIN ); ?></h3>
 		<form method="post">
             <input type="hidden" name="action" value="add" />
@@ -129,9 +70,10 @@ function omn_superadmin_overview_page_default() {
             	<tr>
             		<th><?php _e( 'Target', OMN_TEXTDOMAIN ); ?></th>
             		<td>
-                		<input type="radio" name="target" value="admins" <?php if( $default_target == 'admins' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Administrators of currently active blogs', OMN_TEXTDOMAIN ); ?><br />
-                		<input type="radio" name="target" value="all_users" <?php if( $default_target == 'all_users' ) echo 'checked'; ?> />&nbsp;<?php _e( 'All users in the network', OMN_TEXTDOMAIN ); ?><br />
-                		<input type="radio" name="target" value="specific" <?php if( $default_target == 'specific' ) echo 'checked'; ?> />&nbsp;<?php _e( 'Specific users: ', OMN_TEXTDOMAIN ); ?>&nbsp;<input type="text" name="specific_users_ids" value="<?php echo $specific_users_ids; ?>" />
+                		<input type="radio" name="target" value="admins" <?php checked( $default_target, 'admins' ); ?> />&nbsp;<?php _e( 'Administrators of currently active blogs', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="target" value="admins_by_admin_email" <?php checked( $default_target, 'admins_by_admin_email' ); ?> />&nbsp;<?php _e( 'Administrators of blogs (by admin e-mail address)', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="target" value="all_users" <?php checked( $default_target, 'all_users' ); ?> />&nbsp;<?php _e( 'All users in the network', OMN_TEXTDOMAIN ); ?><br />
+                		<input type="radio" name="target" value="specific" <?php checked ( $default_target == 'specific' ); ?> />&nbsp;<?php _e( 'Specific users: ', OMN_TEXTDOMAIN ); ?>&nbsp;<input type="text" name="specific_users_ids" value="<?php echo $specific_users_ids; ?>" />
                 	</td>
                 	<td><small><?php _e( 'If the "Specific users" option is checked, enter their ID\'s separated by commas.', OMN_TEXTDOMAIN ); ?></small></td>
             		</td>
@@ -156,6 +98,10 @@ function omn_superadmin_overview_page_add() {
 		$target_ids = omn_get_blog_owners();
 		omn_log( 'adding target (blog owners): '.print_r( $target_ids, true ), 1 );
 		break;
+	case "admins_by_admin_email":
+		$target_ids = omn_get_admins_by_email();
+		omn_log( 'adding target (admin emails): '.print_r( $target_ids, true ), 1 );
+		break;
 	case 'all_users':
 		global $wpdb;
 		$target_ids = $wpdb->get_col( 'SELECT ID FROM '.$wpdb->users );
@@ -169,9 +115,9 @@ function omn_superadmin_overview_page_add() {
 		
 	$ok = omn_create_message( $_REQUEST['title'], $_REQUEST['text'], $_REQUEST['link'], get_current_user_id(), $target_ids );
 	if( $ok ) {
-		omn_nag( 'Zpráva byla úspěšně přidána.' );
+		omn_nag( __( "Message created.", OMN_TXD ) );
 	} else {
-		omn_nagerr( 'Při přidávání zprávy došlo k chybě.' );
+		omn_nagerr( __( "Error while creating message.", OMN_TXD ) );
 	}
 	omn_superadmin_overview_page_default();
 }
@@ -199,8 +145,8 @@ function omn_create_message( $title, $text, $link, $author_id, $target_ids ) {
 	);
 	$message_id = $wpdb->insert_id;
 	if( !$inok ) {
+		omn_log( "Database error while adding new message into the database: \"{$wpdb->last_query}\", \"{$wpdb->last_result}\", \"{$wpdb->last_error}\".", 4 );
 		return false;
-		omn_log( 'error adding new message into the database.', 4 );
 	}
 	
 	// přidáme cílové uživatele do unread
@@ -305,6 +251,23 @@ function omn_get_blog_owners() {
 	
 	// hotovo
 	return $result;
+}
+
+
+function omn_get_admins_by_email() {
+	$blogs = omn_wp_get_sites( array( 'public_only' => false ) );
+	$emails = array();
+	foreach( $blogs as $blog ) {
+		$email = get_blog_option( $blog['blog_id'], "admin_email" );
+		$emails[$email] = $email;
+	}
+	$results = array();
+	foreach( $emails as $email ) {
+		$user = get_user_by_email( $email );
+		$results[] = $user->ID;
+	}
+	omn_log( 'omn_get_admins_by_email | result: '.print_r( $results, true ) );
+	return $results;
 }
 
 
