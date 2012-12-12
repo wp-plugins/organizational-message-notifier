@@ -393,11 +393,7 @@ function omn_wp_get_sites($args){
 		$query .= "LIMIT ".$limit.$limit_results;
 	}
 
-	$sql = $wpdb->prepare($query);
-	
-	//omn_log( 'wp_get_sites query: '.$sql, 1 );
-
-	$results = $wpdb->get_results($sql, ARRAY_A);
+	$results = $wpdb->get_results( $query, ARRAY_A );
 
 	return $results;	
 }
