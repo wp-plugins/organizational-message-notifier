@@ -20,7 +20,7 @@ function omn_plugin_activation() {
 		PRIMARY KEY ( id )
 	)';
 	
-	$wpdb->query( $wpdb->prepare( $query_messages ) );
+	$wpdb->query( $query_messages );
 	
 	$query_unread = 'CREATE TABLE IF NOT EXISTS '.$wpdb->base_prefix.'omn_unread (
 		id INT NOT NULL AUTO_INCREMENT,
@@ -30,7 +30,7 @@ function omn_plugin_activation() {
 		PRIMARY KEY ( id )
 	)';
 	
-	$wpdb->query( $wpdb->prepare( $query_unread ) );
+	$wpdb->query( $query_unread );
 }
 
 
@@ -133,18 +133,18 @@ function omn_delete_notification( $user_id, $message_id ) {
 	global $wpdb;
 	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
 		WHERE (
-			message_id='.$message_id.'
-			AND user_id='.$user_id.'
+			message_id = %d
+			AND user_id= %d
 		)';
-	$wpdb->query( $wpdb->prepare( $query ) );
+	$wpdb->query( $wpdb->prepare( $query, $message_id, $user_id ) );
 }
 
 
 function omn_delete_notifications( $message_id ) {
 	global $wpdb;
 	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
-		WHERE message_id='.$message_id;
-	$wpdb->query( $wpdb->prepare( $query ) );
+		WHERE message_id= %d';
+	$wpdb->query( $wpdb->prepare( $query, $message_id ) );
 	omn_log( 'Deleting all notifications for message '.$message_id.'.', 3 );
 }
 
