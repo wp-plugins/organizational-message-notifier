@@ -6,7 +6,7 @@ Author URI: http://zaantar.eu
 Plugin URI: http://wordpress.org/extend/plugins/organizational-message-notifier
 Requires at least: 3.1
 Tested up to: 3.5
-Stable tag: 1.5.6
+Stable tag: 1.5.7
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -30,6 +30,10 @@ Developed for private use, but has perspective for more extensive usage. I can't
 No questions yet.
 
 == Changelog ==
+
+= 1.5.7 =
+* Fix last incorrect $wpdb->prepare() call.
+* Added wishlist to readme.txt
 
 = 1.5.6 =
 * Fix $wpdb->prepare() usage to disable warning in WordPress 3.5.
@@ -60,3 +64,10 @@ No questions yet.
 * removed dependency on the Who is who plugin
 * expanded new message content text field & other minor visual improvements
 * czech translation
+
+== Wishlist ==
+
+* accept list of usernames as a target when creating new message
+* rewrite code using PHP 5.3 features such as namespaces
+* more verbose error logging
+* bulk actions in message table
