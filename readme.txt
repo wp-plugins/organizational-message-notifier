@@ -71,3 +71,4 @@ No questions yet.
 * rewrite code using PHP 5.3 features such as namespaces
 * more verbose error logging
 * bulk actions in message table
+* add html support to email notification template
