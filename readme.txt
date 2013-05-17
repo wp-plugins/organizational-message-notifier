@@ -36,6 +36,7 @@ No questions yet.
 * Note: Requires PHP >= 5.3 from now on, because of using PHP namespaces.
 * Feature: Message can be targeted on all users with specified role (on multisite it is the role on primary blog).
 * Tweak: Show notices and (only unread) message list also to users without "minimal capability" if they have unread messages.
+* Feature: Option to not allow other than default target when creating a message.
 
 = 1.5.7 =
 * Fix last incorrect $wpdb->prepare() call.
