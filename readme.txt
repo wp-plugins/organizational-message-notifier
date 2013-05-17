@@ -4,9 +4,9 @@ Tags: superadmin, multisite, organization, organizational, message
 Donate link: http://zaantar.eu/financni-prispevek
 Author URI: http://zaantar.eu
 Plugin URI: http://wordpress.org/extend/plugins/organizational-message-notifier
-Requires at least: 3.1
-Tested up to: 3.5
-Stable tag: 1.5.7
+Requires at least: 3.5
+Tested up to: 3.5.1
+Stable tag: 2.0
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -30,6 +30,12 @@ Developed for private use, but has perspective for more extensive usage. I can't
 No questions yet.
 
 == Changelog ==
+
+= 2.0 =
+* Almost completely rewritten, polished code.
+* Note: Requires PHP >= 5.3 from now on, because of using PHP namespaces.
+* Feature: Message can be targeted on all users with specified role (on multisite it is the role on primary blog).
+* Tweak: Show notices and (only unread) message list also to users without "minimal capability" if they have unread messages.
 
 = 1.5.7 =
 * Fix last incorrect $wpdb->prepare() call.
@@ -71,4 +77,3 @@ No questions yet.
 * rewrite code using PHP 5.3 features such as namespaces
 * more verbose error logging
 * bulk actions in message table
-* add html support to email notification template

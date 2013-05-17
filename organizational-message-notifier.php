@@ -2,7 +2,7 @@
 /*
 Plugin Name: Organizational message notifier
 Description: Allows network admin to send organizational messages to blog admins. Includes read confirmation.
-Version: 1.5.7
+Version: 2.0
 Author: Zaantar
 Donate link: http://zaantar.eu/financni-prispevek
 Author URI: http://zaantar.eu
@@ -12,10 +12,10 @@ License: GPL2
 */
 
 /*
-    Copyright 2011 Zaantar (email: zaantar@gmail.com)
+    Copyright 2011 Zaantar (email: zaantar@zaantar.eu)
 
     This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License, version 2, as 
+    it under the terms of the GNU General Public License, version 2, as
     published by the Free Software Foundation.
 
     This program is distributed in the hope that it will be useful,
@@ -29,91 +29,114 @@ License: GPL2
 */
 
 
-require_once plugin_dir_path( __FILE__ ).'includes/overview.php';
-require_once plugin_dir_path( __FILE__ ).'includes/overview-table.php';
-require_once plugin_dir_path( __FILE__ ).'includes/notification.php';
-require_once plugin_dir_path( __FILE__ ).'includes/database.php';
-require_once plugin_dir_path( __FILE__ ).'includes/settings.php';
-
-register_activation_hook( __FILE__,'omn_plugin_activation' );
-
-
-/*****************************************************************************\
-		I18N
-\*****************************************************************************/
-
-
-define( 'OMN_TEXTDOMAIN', 'organizational-message-notifier' );
-define( "OMN_TXD", OMN_TEXTDOMAIN );
-
-
-add_action( 'init', 'omn_load_textdomain' );
-
-function omn_load_textdomain() {
-	$plugin_dir = basename( dirname(__FILE__) );
-	load_plugin_textdomain( OMN_TEXTDOMAIN, false, $plugin_dir.'/languages' );
-}
-
-
-
-/* ************************************************************************* *\
-	ADMIN MENU & NOTICES
-\* ************************************************************************* */
-
-
-add_action( 'network_admin_menu','omn_network_admin_menu' );
-
-function omn_network_admin_menu() {
-	add_submenu_page( 
-		'index.php', 
-		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
-		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
-		'manage_network_options', 
-		'omn-superadmin-overview', 
-		'omn_superadmin_overview_page' 
-	);
-	add_submenu_page( 
-		'settings.php', 
-		__( 'Organizational Message Notifier', OMN_TEXTDOMAIN ), 
-		__( 'Organizational Message Notifier', OMN_TEXTDOMAIN ), 
-		'manage_network_options', 
-		'omn-settings',
-		'omn_settings_page'
-	);
-
-}
-
-add_action( 'admin_menu','omn_admin_menu' );
-
-function omn_admin_menu() {
-	extract( omn_get_settings() );
-	add_submenu_page( 
-		'index.php', 
-		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
-		__( 'Organizational messages', OMN_TEXTDOMAIN ), 
-		$minimal_capability, 
-		'omn-messages', 
-		'omn_messages_page' 
-	);
-}
-
-
-function omn_nag( $message ) {
-	echo( '<div id="message" class="updated"><p>'.$message.'</p></div>' );
-}
-
-function omn_nagerr( $message ) {
-	echo( '<div id="message" class="error"><p>'.$message.'</p></div>' );
-}
-
-
-define( 'OMN_LOGNAME', 'organizational-message-notifier' );
-
-function omn_log( $message, $category = 1 ) {
-	if( defined( 'WLS' ) && wls_is_registered( OMN_LOGNAME ) ) {
-		wls_simple_log( OMN_LOGNAME, $message, $category );
+namespace OrganizationalMessageNotifier {
+	
+	use \OrganizationalMessageNotifier\Database as db;
+	use \OrganizationalMessageNotifier\z;
+	
+	/* Assure that 'class-wp-list-table.php' is available. */
+	if(!class_exists('WP_List_Table')) {
+		require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 	}
-}
+	
+	/* Include all neccessary plugin files */
+	$includes = array(
+			"database.php",
+			"message-table.php",
+			"messages-ui.php",
+			"messages.php",
+			"notification.php",
+			"settings-ui.php",
+			"settings.php",
+			"zan.php" );
+	
+	/* Include the files defined above */
+	foreach( $includes as $include ) {
+		require_once plugin_dir_path( __FILE__ ) . "includes/$include";
+	}
+	
+	
+	/* Installation */
+	register_activation_hook( __FILE__, "\OrganizationalMessageNotifier\install" );
+	
+	function install() {
+		db\create_tables();
+	}
+	
+	
+	/* I18N */
+	define( "OMN_TXD", "organizational-message-notifier" );
+	
+	add_action( 'init', "\OrganizationalMessageNotifier\load_plugin_textdomain" );
+	
+	
+	function load_plugin_textdomain() {
+		\load_plugin_textdomain( OMN_TXD, false, basename( dirname(__FILE__) ) . "/languages" );
+	}
 
+	/* Logging */
+	define( "OMN_LOGNAME", "organizational-message-notifier" );
+	
+	
+	class Log {
+	
+		/* This is a static class */
+		private function __construct() { }
+	
+		static function dberror( $action ) {
+			global $wpdb;
+			self::log( "Database error while performing action '$action': QUERY '{$wpdb->last_query}'; RESULT '".print_r( $wpdb->last_result, true )."'; ERROR '{$wpdb->last_error}'.", 4 );
+		}
+	
+	
+		static function log( $message, $severity ) {
+			if( defined( 'WLS' ) && wls_is_registered( OMN_LOGNAME ) ) {
+				wls_simple_log( OMN_LOGNAME, $message, $severity );
+			}
+		}
+	
+	
+		static function debug( $message ) {
+			self::log( $message, 1 );
+		}
+	
+	
+		static function info( $message ) {
+			self::log( $message, 2 );
+		}
+	
+		static function warning( $message ) {
+			self::log( $message, 3 );
+		}
+	
+		static function error( $message ) {
+			self::log( $message, 4 );
+		}
+	
+		static function fatal( $message ) {
+			self::log( $message, 5 );
+		}
+	
+	
+		static function register() {
+			if( defined( "WLS" ) ) {
+				return wls_register( OMN_LOGNAME, __( "Organizational Message Notifier events.", OMN_TXD ) );
+			} else {
+				return false;
+			}
+		}
+	
+	
+		static function unregister() {
+			if( defined( "WLS" ) ) {
+				return wls_unregister( OMN_LOGNAME );
+			} else {
+				return false;
+			}
+		}
+	
+	}
+
+}
 
 ?>

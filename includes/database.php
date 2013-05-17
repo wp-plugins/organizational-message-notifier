@@ -1,159 +1,192 @@
 <?php
 
-
-/* ************************************************************************* *\
-	INSTALLATION
-\* ************************************************************************* */
-
-
-function omn_plugin_activation() {
-	global $wpdb;
+namespace OrganizationalMessageNotifier\Database {
 	
-	$query_messages = 'CREATE TABLE IF NOT EXISTS '.$wpdb->base_prefix.'omn_messages (
-		id INT NOT NULL AUTO_INCREMENT,
-		title VARCHAR(200),
-		text LONGTEXT,
-		date DATETIME,
-		link VARCHAR(200),
-		author BIGINT(20),
-		UNIQUE ( id ),
-		PRIMARY KEY ( id )
-	)';
+	use \OrganizationalMessageNotifier\Log;
 	
-	$wpdb->query( $query_messages );
+	const MESSAGES = "omn_messages";
+	const UNREAD = "omn_unread";
 	
-	$query_unread = 'CREATE TABLE IF NOT EXISTS '.$wpdb->base_prefix.'omn_unread (
-		id INT NOT NULL AUTO_INCREMENT,
-		message_id INT,
-		user_id BIGINT(20),
-		UNIQUE ( id ),
-		PRIMARY KEY ( id )
-	)';
+	/** Returns a table name for provided constant (must be one of the above). */
+	function tn( $table_name ) {
+		global $wpdb;
+		return $wpdb->base_prefix . $table_name;
+	}
 	
-	$wpdb->query( $query_unread );
-}
-
-
-/* ************************************************************************* *\
-	DATABASE ACCESS
-\* ************************************************************************* */
-
-
-function omn_messages_table() {
-	global $wpdb;
-	return $wpdb->base_prefix.'omn_messages';
-}
-
-
-function omn_unread_table() {
-	global $wpdb;
-	return $wpdb->base_prefix.'omn_unread';
-}
-
-
-function omn_get_messages( $orderby = "date", $order = "DESC") {
-	global $wpdb;
-	$results = $wpdb->get_results( 'SELECT * FROM '.omn_messages_table()." ORDER BY $orderby $order" );
-	return $results;
-}
-
-
-function omn_is_message_unread( $message_id ) {
-	global $wpdb;
-	$query = $wpdb->prepare( '
-		SELECT COUNT(*) 
-		FROM '.omn_unread_table().'
-		WHERE (
-			message_id = %d 
-			AND user_id = %d 
-		)',
-		$message_id, get_current_user_id()
-	);
-	return ( $wpdb->get_var( $query ) > 0 );
-}
-
-
-function omn_unread_count() {
-	global $wpdb;
-	$count = $wpdb->get_var( 
-		$wpdb->prepare( 'SELECT COUNT(1) FROM '.omn_unread_table().' WHERE user_id = %d', get_current_user_id() ) 
-	);
-	return $count;
-}
-
-
-function omn_get_unread_messages() {
-	global $wpdb;
-	$query = $wpdb->prepare( '
-		SELECT messages.id AS id, messages.title AS title, messages.link AS link, 
-			messages.text AS text, messages.date AS date, messages.author AS author
-		FROM '.omn_unread_table().' AS unread
-			JOIN '.omn_messages_table().' AS messages
-			ON unread.message_id = messages.id
-		WHERE unread.user_id = %d
-		ORDER BY date DESC',
-		get_current_user_id()
-	);
-	$results = $wpdb->get_results( $query );
-	return $results;
-}
-
-
-function omn_get_nonreading_users( $message_id ) {
-	global $wpdb;
-	return $wpdb->get_col( $wpdb->prepare( 
-		'SELECT user_id
-		FROM '.omn_unread_table().'
-		WHERE message_id = %d',
-		$message_id 
-	) );
-}
-
-
-function omn_get_nonreading_user_count( $message_id ) {
-	global $wpdb;
-	return $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(*) FROM ".omn_unread_table()." WHERE message_id = %d", $message_id ) );
-}
-
-
-function omn_read_message( $message_id ) {
-	global $wpdb;
-	$wpdb->query( $wpdb->prepare( 
-		'DELETE FROM '.omn_unread_table().'
-		WHERE (
-			user_id = %d
-			AND message_id = %d
-		)',
-		get_current_user_id(), $message_id ) );
-	omn_log( 'marking message '.$message_id.' as read.', 2 );
-}
-
-
-function omn_delete_notification( $user_id, $message_id ) {
-	global $wpdb;
-	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
-		WHERE (
-			message_id = %d
-			AND user_id= %d
-		)';
-	$wpdb->query( $wpdb->prepare( $query, $message_id, $user_id ) );
-}
-
-
-function omn_delete_notifications( $message_id ) {
-	global $wpdb;
-	$query = 'DELETE FROM '.$wpdb->base_prefix.'omn_unread
-		WHERE message_id= %d';
-	$wpdb->query( $wpdb->prepare( $query, $message_id ) );
-	omn_log( 'Deleting all notifications for message '.$message_id.'.', 3 );
-}
-
-
-function omn_delete_message( $message_id ) {
-	global $wpdb;
-	omn_log( 'Deleting message '.$message_id.'.', 3 );
-	$wpdb->query( $wpdb->prepare( 'DELETE FROM '.omn_messages_table().' WHERE id = %d', $message_id ) );
-	omn_delete_notifications( $message_id );
+	
+	function create_tables() {
+		global $wpdb;
+	
+		$query_messages = "CREATE TABLE IF NOT EXISTS " . tn( MESSAGES ) . " (
+				id INT NOT NULL AUTO_INCREMENT,
+				title VARCHAR(200),
+				text LONGTEXT,
+				date DATETIME,
+				link VARCHAR(200),
+				author BIGINT(20),
+				UNIQUE (id),
+				PRIMARY KEY (id) )";
+	
+		$wpdb->query( $query_messages );
+	
+		$query_unread = "CREATE TABLE IF NOT EXISTS " . tn( UNREAD ) . " (
+				id INT NOT NULL AUTO_INCREMENT,
+				message_id INT,
+				user_id BIGINT(20),
+				UNIQUE ( id ),
+				PRIMARY KEY ( id ) )";
+	
+		$wpdb->query( $query_unread );
+	}
+	
+	
+	function get_messages( $orderby = "date", $order = "DESC", $limit = NULL, $offset = 0 ) {
+		global $wpdb;
+		$limit = ( $limit == NULL ) ? "" : $wpdb->prepare( "LIMIT %d OFFSET %d", $limit, $offset );
+		$results = $wpdb->get_results( "SELECT * FROM " . tn( MESSAGES ) . " ORDER BY $orderby $order $limit" );
+		return $results;
+	}
+	
+	
+	function get_message_count() {
+		global $wpdb;
+		return $wpdb->get_var( "SELECT COUNT(1) FROM " . tn( MESSAGES ) );
+	}
+	
+	
+	function get_who_didnt_read_message( $message_id ) {
+		global $wpdb;
+		return $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM " . tn( UNREAD ) . " WHERE message_id = %d", $message_id ) );
+	}
+	
+	
+	function get_count_who_didnt_read_message( $message_id ) {
+		global $wpdb;
+		return $wpdb->get_col( $wpdb->prepare( "SELECT COUNT(1) FROM " . tn( UNREAD ) . " WHERE message_id = %d", $message_id ) );
+	}
+	
+	
+	function get_user_unread_messages( $user_id ) {
+		global $wpdb;
+		$query = $wpdb->prepare(
+				"SELECT messages.id AS id, messages.title AS title, messages.link AS link,
+					messages.text AS text, messages.date AS date, messages.author AS author
+				FROM " . tn( UNREAD ). " AS unread JOIN " . tn( MESSAGES ) . " AS messages ON unread.message_id = messages.id
+				WHERE unread.user_id = %d
+				ORDER BY date DESC",
+				$user_id );
+		$results = $wpdb->get_results( $query );
+		return $results;
+	}
+	
+	
+	function get_user_unread_message_count( $user_id ) {
+		global $wpdb;
+		$count = $wpdb->get_var(
+				$wpdb->prepare( "SELECT COUNT(1) FROM ". tn( UNREAD ). " WHERE user_id = %d", $user_id ) );
+		return $count;
+	}
+	
+	
+	function insert_message( $title, $text, $link, $author, $date ) {
+		global $wpdb;
+		
+		Log::info( "Creating new message: title = $title, link = \"$link\", author = $author, date = $date, text: $text" );
+		
+		$iok = $wpdb->insert(
+				tn( MESSAGES ),
+				array(
+						"title" => $title,
+						"text" => $text,
+						"link" => $link,
+						"author" => $author,
+						"date" => $date ),
+				array( '%s', '%s', '%s', '%d', '%s' ) );
+		
+		$message_id = $wpdb->insert_id;
+		if( $iok === false ) {
+			Log::dberror( "add new message" );
+			return false;
+		} else {
+			return $message_id;
+		}
+	}
+	
+	
+	function insert_target( $message_id, $user_id ) {
+		global $wpdb;
+		$iok = $wpdb->insert(
+				tn( UNREAD ),
+				array( "message_id" => $message_id, "user_id" => $user_id ),
+				array( '%d', '%d' )	);
+		
+		if( $iok === false ) {
+			Log::dberror( "add new target" );
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
+	function target_exists( $message_id, $user_id ) {
+		global $wpdb;
+		$query = $wpdb->prepare(
+				"SELECT COUNT(1) FROM " . tn( UNREAD ) . "WHERE ( message_id = %d AND user_id = %d	)",
+				$message_id,
+				$user_id );
+		return ( $wpdb->get_var( $query ) > 0 );
+	}
+	
+	
+	function delete_target( $message_id, $user_id ) {
+		global $wpdb;
+		$query = "DELETE FROM " . tn( UNREAD ) . " WHERE ( message_id = %d AND user_id= %d )";
+		$ok = $wpdb->query( $wpdb->prepare( $query, $message_id, $user_id ) );
+		if( $ok === false ) {
+			Log::dberror( "delete target" );
+			return false;
+		} else {
+			Log::info( "Message $message_id marked as read for user $user_id." );
+			return true;
+		}
+	}
+	
+	
+	function delete_all_targets( $message_id ) {
+		global $wpdb;
+		$query = "DELETE FROM " . tn( UNREAD ). " WHERE message_id = %d";
+		$ok = $wpdb->query( $wpdb->prepare( $query, $message_id ) );
+		if( $ok === false ) {
+			Log::dberror( "delete all targets" );
+			return false;
+		} else {
+			Log::log( 'Deleting all targets for message '.$message_id.'.', 3 );
+			return true;
+		}
+	}
+	
+	
+	function delete_message( $message_id ) {
+		global $wpdb;
+		Log::log( 'Deleting message '.$message_id.'.', 3 );
+		
+		if( get_count_who_didnt_read_message( $message_id ) > 0 ) {
+			$ok = delete_all_targets( $message_id );
+			if( !$ok ) {
+				return false;
+			}
+		}
+		
+		$ok = $wpdb->query( $wpdb->prepare( "DELETE FROM " . tn( MESSAGES ) . " WHERE id = %d", $message_id ) );
+		if( $ok === false ) {
+			Log::dberror( "delete message" );
+			return false;
+		} else {
+			Log::debug( "Message $message_id deleted." );
+			return true;
+		}
+	}
 }
 
 ?>
