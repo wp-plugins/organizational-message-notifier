@@ -170,13 +170,16 @@ namespace OrganizationalMessageNotifier\SettingsUI {
 				</tr>
 				<tr valign="top">
                 	<th>
-                		<label><?php _e( "Target role", OMN_TXD ); ?></label><br />
+                		<label><?php _e( "Target roles", OMN_TXD ); ?></label><br />
                 	</th>
                 	<td>
 						<input type="text" name="settings[target_role]" value="<?php echo $settings->target_role; ?>" />
 					</td>
 					<td>
-						<small><?php _e( "This has meaning only if default target is set to \"Users with specified role\".", OMN_TXD ); ?></small>
+						<small>
+							<?php _e( "This has meaning only if default target is set to \"Users with specified role\".", OMN_TXD ); ?>
+							<?php printf( __( "You can enter more roles separated by %s without spaces.", OMN_TXD ), "<code>,</code>" ); ?>
+						</small>
 					</td>
 				</tr>
 				<tr valign="top">

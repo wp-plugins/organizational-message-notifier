@@ -35,7 +35,7 @@ namespace OrganizationalMessageNotifier\Messages {
 				
 			case MessageTargets::ROLE:
 				$target_ids = get_user_ids_by_role( $target_details );
-				Log::debug( "adding target (role = {$target_details}): " . print_r( $target_ids, true ) );
+				Log::debug( "adding target (roles = {$target_details}): " . print_r( $target_ids, true ) );
 				break;
 		}
 		return $target_ids;
@@ -126,8 +126,23 @@ namespace OrganizationalMessageNotifier\Messages {
 	}
 	
 	
-	function get_user_ids_by_role( $role_name ) {
-		$users = get_users( "role={$role_name}" );
+	function get_user_ids_by_role( $role_names ) {
+		
+		$roles = explode( ",", $role_names );
+		$users = array();
+		
+		/* Is there a better option? http://wordpress.stackexchange.com/questions/39315/get-multiple-roles-with-get-users */
+		foreach( $roles as $role ) {
+        	$users_query = new \WP_User_Query( array(
+		            'fields' => 'all_with_meta',
+		            'role' => $role,
+		            'orderby' => 'display_name' ) );
+        	$results = $users_query->get_results();
+        	if($results) {
+        		$users = array_merge( $users, $results );
+        	}
+		}
+    
 		$target_ids = array();
 		foreach( $users as $user ) {
 			$target_ids[] = $user->ID;

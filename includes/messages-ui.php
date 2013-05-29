@@ -187,12 +187,14 @@ namespace OrganizationalMessageNotifier\MessagesUI {
 								?>
 		                		
 		                	</td>
-		                	<td>
-								<small>
-									<?php _e( 'If the "Specified users" option is checked, enter their ID\'s separated by commas.', OMN_TXD ); ?>
-									<?php _e( 'If the "Users with specified role" option is checked, enter valid user role.', OMN_TXD ); ?>
-								</small>
-		            		</td>
+		                	<?php
+		                		if( $settings->allow_nondefault_target ) {
+									echo "<td><small>";
+									_e( 'If the "Specified users" option is checked, enter their ID\'s separated by commas.', OMN_TXD );
+									_e( 'If the "Users with specified role" option is checked, enter valid user roles separated by commas.', OMN_TXD );
+									echo "</small></td>";
+								}
+		                	?>
 		            	</tr>
 		            </table>
 		            <?php submit_button( __( 'Create', OMN_TXD ), "primary" )?>

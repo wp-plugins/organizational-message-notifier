@@ -30,7 +30,7 @@ namespace OrganizationalMessageNotifier\Notification {
 			$settings = Settings::getInstance();
 			//if( current_user_can( $settings->minimal_capability ) ) {
 				$url = get_messages_page_link( get_current_user_id() );
-				z::nag( sprintf( __( '%sYou have %d unread messages%s concerning blog operation. For reading them continue, please, %shere%s.', OMN_TXD ), '<strong>', $count, '</strong>', '<a href="'.$url.'">', '</a>.' ) );
+				z::nag( sprintf( __( '%sYou have %d unread messages%s concerning website operation. For reading them continue, please, %shere%s.', OMN_TXD ), '<strong>', $count, '</strong>', '<a href="'.$url.'">', '</a>.' ) );
 			//}
 		}
 	}

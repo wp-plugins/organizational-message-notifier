@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Organizational message notifier v2.0\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/organizational-message-notifier\n"
 "POT-Creation-Date: 2012-02-27 18:51:01+00:00\n"
-"PO-Revision-Date: 2013-05-17 21:04:09+0000\n"
+"PO-Revision-Date: 2013-05-29 11:45:36+0000\n"
 "Last-Translator: Zaantar <zaantar@zaantar.eu>\n"
 "Language-Team: Zaantar <zaantar@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -20,12 +20,6 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Textdomain-Support: yes"
 
-#: includes/notification.php:33
-#, php-format
-#@ organizational-message-notifier
-msgid "%sYou have %d unread messages%s concerning blog operation. For reading them continue, please, %shere%s."
-msgstr "%sMáte %d nepřečtených zpráv%s týkajících se provozu blogu. Pro jejich přečtení pokračujte, prosím na %stuto stránku%s."
-
 #: includes/notification.php:50
 #, php-format
 #@ organizational-message-notifier
@@ -35,69 +29,69 @@ msgstr "Máte %d nepřečtených zpráv! Klikněte sem pro jejich zobrazení."
 #: includes/messages-ui.php:43
 #: includes/messages-ui.php:44
 #: includes/messages-ui.php:134
-#: includes/messages-ui.php:255
+#: includes/messages-ui.php:257
 #@ organizational-message-notifier
 msgid "Organizational messages"
 msgstr "Organizační zprávy"
 
-#: includes/messages-ui.php:267
+#: includes/messages-ui.php:269
 #@ organizational-message-notifier
 msgid "Please read following messages and then mark them as read."
 msgstr "Přečtěte si, prosím, následující zprávy a označte je jako přečtené."
 
-#: includes/messages-ui.php:271
+#: includes/messages-ui.php:273
 #@ organizational-message-notifier
 msgid "Here is a list of all organizational messages."
 msgstr "Zde je výpis všech organizačních zpráv."
 
-#: includes/messages-ui.php:278
-#: includes/messages-ui.php:286
+#: includes/messages-ui.php:280
+#: includes/messages-ui.php:288
 #@ organizational-message-notifier
 msgid "Message"
 msgstr "Zpráva"
 
 #: includes/message-table.php:23
-#: includes/messages-ui.php:279
-#: includes/messages-ui.php:287
+#: includes/messages-ui.php:281
+#: includes/messages-ui.php:289
 #@ organizational-message-notifier
 msgid "Author"
 msgstr "Autor"
 
 #: includes/message-table.php:21
-#: includes/messages-ui.php:279
-#: includes/messages-ui.php:287
+#: includes/messages-ui.php:281
+#: includes/messages-ui.php:289
 #@ organizational-message-notifier
 msgid "Date"
 msgstr "Datum"
 
-#: includes/messages-ui.php:280
-#: includes/messages-ui.php:288
+#: includes/messages-ui.php:282
+#: includes/messages-ui.php:290
 #@ organizational-message-notifier
 msgid "Text"
 msgstr "Obsah zprávy"
 
-#: includes/messages-ui.php:281
-#: includes/messages-ui.php:289
+#: includes/messages-ui.php:283
+#: includes/messages-ui.php:291
 #@ organizational-message-notifier
 msgid "Action"
 msgstr "Akce"
 
-#: includes/messages-ui.php:310
+#: includes/messages-ui.php:312
 #@ organizational-message-notifier
 msgid "I have read it."
 msgstr "Četl/a  jsem."
 
-#: includes/messages-ui.php:325
+#: includes/messages-ui.php:327
 #@ organizational-message-notifier
 msgid " unread "
 msgstr " nepřečtené "
 
-#: includes/messages-ui.php:332
+#: includes/messages-ui.php:334
 #@ organizational-message-notifier
 msgid "Show all messages"
 msgstr "Zobrazit všechny zprávy"
 
-#: includes/messages-ui.php:335
+#: includes/messages-ui.php:337
 #@ organizational-message-notifier
 msgid "Show only unread messages"
 msgstr "Zobrazit jen nepřečtené zprávy"
@@ -148,7 +142,7 @@ msgstr "Titulek"
 msgid "Link"
 msgstr "Odkaz"
 
-#: includes/messages-ui.php:198
+#: includes/messages-ui.php:200
 #@ organizational-message-notifier
 msgid "Create"
 msgstr "Vytvořit"
@@ -256,27 +250,22 @@ msgstr "Chyba při odstraňování zprávy."
 msgid "Target"
 msgstr "Cíl"
 
-#: includes/messages-ui.php:192
+#: includes/messages-ui.php:193
 #@ organizational-message-notifier
 msgid "If the \"Specified users\" option is checked, enter their ID's separated by commas."
 msgstr "Pokud jste zvolili možnost \\\"specifičtí uživatelé\\\", zadejte jejich ID oddělená čárkami."
 
-#: includes/messages-ui.php:193
-#@ organizational-message-notifier
-msgid "If the \"Users with specified role\" option is checked, enter valid user role."
-msgstr "Pokud jste zvolili \\\"uživatelé s vybranou rolí\\\", zadejte název platné role."
-
-#: includes/messages-ui.php:220
+#: includes/messages-ui.php:222
 #@ organizational-message-notifier
 msgid "Message has been marked as read. Thank you!"
 msgstr "Zpráva byla označena za přečtenou. Děkujeme!"
 
-#: includes/messages-ui.php:222
+#: includes/messages-ui.php:224
 #@ organizational-message-notifier
 msgid "Error while marking message as read."
 msgstr "Chyba při označování zprávy za přečtenou."
 
-#: includes/messages-ui.php:324
+#: includes/messages-ui.php:326
 #, php-format
 #@ organizational-message-notifier
 msgid "There are no%smessages."
@@ -326,85 +315,80 @@ msgstr "Specifičtí uživatelé"
 msgid "This has meaning only if default target is set to \"Specific users\"."
 msgstr "Toto má význam pouze pokud je výchozí cíl nastaven na \\\"specifičtí uživatelé\\\"."
 
-#: includes/settings-ui.php:173
-#@ organizational-message-notifier
-msgid "Target role"
-msgstr "Cílová uživatelská role"
-
-#: includes/settings-ui.php:179
+#: includes/settings-ui.php:180
 #@ organizational-message-notifier
 msgid "This has meaning only if default target is set to \"Users with specified role\"."
 msgstr "Toto má význam, pouze pokud je výchozí cíl nastaven na \\\"uživatelé s vybranou rolí\\\"."
 
-#: includes/settings-ui.php:184
+#: includes/settings-ui.php:187
 #@ organizational-message-notifier
 msgid "Allow other than default target"
 msgstr "Povolit jiný než výchozí cíl"
 
-#: includes/settings-ui.php:190
+#: includes/settings-ui.php:193
 #@ organizational-message-notifier
 msgid "If not checked, there will be no option to select target when creating a message."
 msgstr "Pokud tato volba není aktivní, nezobrazí se při vytváření zprávy možnost vybrat cíl."
 
-#: includes/settings-ui.php:195
+#: includes/settings-ui.php:198
 #@ organizational-message-notifier
 msgid "User capability neccessary to show ALL messages"
 msgstr "Capability (oprávnění) uživatele pro zobrazení VŠECH zpráv"
 
-#: includes/settings-ui.php:202
+#: includes/settings-ui.php:205
 #@ organizational-message-notifier
 msgid "Currently the plugin stores only messages and information which message is targeted for which user. After user marks the message as read, target is deleted."
 msgstr "V současnosti plugin uchovává pouze zprávy a informaci o tom, která zpráva je určena kterému uživateli (tzv. cíl). Poté, co uživatel označí zprávu za přečtenou, je cíl odstraněn."
 
-#: includes/settings-ui.php:203
+#: includes/settings-ui.php:206
 #@ organizational-message-notifier
 msgid "So if an user wants to view already read messages, we can show him either all or none of them. This setting determines which users will have access to all messages."
 msgstr "Z toho plyne, že když uživatel chce zobrazit již přečtené zprávy, můžeme mu ukázat buď všechny nebo žádnou. Toto nastavení určuje, kdo bude mít přístup ke všem zprávám."
 
-#: includes/settings-ui.php:204
+#: includes/settings-ui.php:207
 #, php-format
 #@ organizational-message-notifier
 msgid "See %sWordPress Codex%s for information about capabilities."
 msgstr "Navštivte %sWordPress Codex%s (angl.) pro další informace o capabilities."
 
-#: includes/settings-ui.php:205
+#: includes/settings-ui.php:208
 #@ organizational-message-notifier
 msgid "If you need message history for each user, please contact plugin developer with feature request."
 msgstr "Pokud by se vám hodilo mít historii zpráv pro každého uživatele zvlášť, kontaktujte autora pluginu."
 
-#: includes/settings-ui.php:211
+#: includes/settings-ui.php:214
 #: includes/zan.php:60
 #@ organizational-message-notifier
 msgid "Hide donation button"
 msgstr "Skrýt prosbu o dotaci"
 
-#: includes/settings-ui.php:216
+#: includes/settings-ui.php:219
 #: includes/zan.php:65
 #@ organizational-message-notifier
 msgid "If you don't want to be bothered again..."
 msgstr "Pokud již nechcete být obtěžováni..."
 
-#: includes/settings-ui.php:219
+#: includes/settings-ui.php:222
 #@ organizational-message-notifier
 msgid "E-mail notification"
 msgstr "Upozornění e-mailem"
 
-#: includes/settings-ui.php:223
+#: includes/settings-ui.php:226
 #@ organizational-message-notifier
 msgid "Enable e-mail notification"
 msgstr "Povolit upozorňování e-mailem"
 
-#: includes/settings-ui.php:231
+#: includes/settings-ui.php:234
 #@ organizational-message-notifier
 msgid "Template"
 msgstr "Šablona"
 
-#: includes/settings-ui.php:234
+#: includes/settings-ui.php:237
 #@ organizational-message-notifier
 msgid "Subject"
 msgstr "Předmět"
 
-#: includes/settings-ui.php:243
+#: includes/settings-ui.php:246
 #@ organizational-message-notifier
 msgid "Save"
 msgstr "Uložit"
@@ -463,4 +447,26 @@ msgstr ""
 #@ organizational-message-notifier
 msgid "I spend quite a lot of my precious time working on opensource WordPress plugins. If you find this one useful, please consider helping me develop it further. Even the smallest amount of money you are willing to spend will be welcome."
 msgstr ""
+
+#: includes/messages-ui.php:194
+#@ organizational-message-notifier
+msgid "If the \"Users with specified role\" option is checked, enter valid user roles separated by commas."
+msgstr "Pokud je cíl nastaven na \\\"Uživatelé s vybranou rolí\\\", zadejte platné uživatelské role oddělené čárkami."
+
+#: includes/notification.php:33
+#, php-format
+#@ organizational-message-notifier
+msgid "%sYou have %d unread messages%s concerning website operation. For reading them continue, please, %shere%s."
+msgstr "%sMáte %d nepřečtených zpráv%d týkajících se provozu webu. Pro jejich přečtení, prosím, pokračujte %sna tento odkaz%s."
+
+#: includes/settings-ui.php:173
+#@ organizational-message-notifier
+msgid "Target roles"
+msgstr "Cílové role"
+
+#: includes/settings-ui.php:181
+#, php-format
+#@ organizational-message-notifier
+msgid "You can enter more roles separated by %s without spaces."
+msgstr "Můžete zadat více rolí oddělených %s bez mezer."
 
