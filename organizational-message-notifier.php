@@ -2,7 +2,7 @@
 /*
 Plugin Name: Organizational message notifier
 Description: Allows network admin to send organizational messages to blog admins. Includes read confirmation.
-Version: 2.0.1
+Version: 2.0.2
 Author: Zaantar
 Donate link: http://zaantar.eu/financni-prispevek
 Author URI: http://zaantar.eu

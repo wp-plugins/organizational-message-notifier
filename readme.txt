@@ -6,7 +6,7 @@ Author URI: http://zaantar.eu
 Plugin URI: http://wordpress.org/extend/plugins/organizational-message-notifier
 Requires at least: 3.5
 Tested up to: 3.5.1
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 
 Allows network admin to send organizational messages to blog admins. Includes read confirmation.
 
@@ -30,6 +30,10 @@ Developed for private use, but has perspective for more extensive usage. I can't
 No questions yet.
 
 == Changelog ==
+
+= 2.0.2 =
+* Fix: Actually fix the error addressed in 2.0.1.
+* Czech translation updated.
 
 = 2.0.1 =
 * Fix: Missing backslash causing invalid callback.

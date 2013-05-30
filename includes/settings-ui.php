@@ -12,7 +12,7 @@ namespace OrganizationalMessageNotifier\SettingsUI {
 	
 	
 	/* Admin menu */
-	add_action( "network_admin_menu", "\OrganizationalMessageNotifier\SettingsUI\network_admin_menu" );
+	add_action( "network_admin_menu", "\OrganizationalMessageNotifier\SettingsUI\\network_admin_menu" );
 	
 	
 	function network_admin_menu() {

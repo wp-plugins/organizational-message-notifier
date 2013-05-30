@@ -1,9 +1,9 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Organizational message notifier v2.0\n"
+"Project-Id-Version: Organizational message notifier v2.0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/organizational-message-notifier\n"
 "POT-Creation-Date: 2012-02-27 18:51:01+00:00\n"
-"PO-Revision-Date: 2013-05-29 11:45:36+0000\n"
+"PO-Revision-Date: 2013-05-30 07:14:45+0000\n"
 "Last-Translator: Zaantar <zaantar@zaantar.eu>\n"
 "Language-Team: Zaantar <zaantar@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -30,6 +30,7 @@ msgstr "Máte %d nepřečtených zpráv! Klikněte sem pro jejich zobrazení."
 #: includes/messages-ui.php:44
 #: includes/messages-ui.php:134
 #: includes/messages-ui.php:257
+#: includes/overview.php:49
 #@ organizational-message-notifier
 msgid "Organizational messages"
 msgstr "Organizační zprávy"
@@ -53,6 +54,7 @@ msgstr "Zpráva"
 #: includes/message-table.php:23
 #: includes/messages-ui.php:281
 #: includes/messages-ui.php:289
+#: includes/overview-table.php:26
 #@ organizational-message-notifier
 msgid "Author"
 msgstr "Autor"
@@ -60,6 +62,7 @@ msgstr "Autor"
 #: includes/message-table.php:21
 #: includes/messages-ui.php:281
 #: includes/messages-ui.php:289
+#: includes/overview-table.php:24
 #@ organizational-message-notifier
 msgid "Date"
 msgstr "Datum"
@@ -96,7 +99,7 @@ msgstr "Zobrazit všechny zprávy"
 msgid "Show only unread messages"
 msgstr "Zobrazit jen nepřečtené zprávy"
 
-#: organizational-message-notifier.php:123
+#: organizational-message-notifier.php:122
 #@ organizational-message-notifier
 msgid "Organizational Message Notifier events."
 msgstr "Události pluginu Organizational Message Notifier"
@@ -118,31 +121,38 @@ msgstr "Úspěšně odregistrováno od WLS, záznamy byly odstraněny."
 
 #: includes/message-table.php:24
 #: includes/messages-ui.php:154
+#: includes/overview-table.php:27
+#: includes/overview.php:67
 #@ organizational-message-notifier
 msgid "Content"
 msgstr "Obsah"
 
 #: includes/message-table.php:112
+#: includes/overview-table.php:127
 #@ organizational-message-notifier
 msgid "(has been read by everyone)"
 msgstr "(zprávu četli všichni adresáti)"
 
 #: includes/messages-ui.php:141
+#: includes/overview.php:54
 #@ organizational-message-notifier
 msgid "Create new message"
 msgstr "Vytvoření nové zprávy"
 
 #: includes/messages-ui.php:146
+#: includes/overview.php:59
 #@ organizational-message-notifier
 msgid "Title"
 msgstr "Titulek"
 
 #: includes/messages-ui.php:150
+#: includes/overview.php:63
 #@ organizational-message-notifier
 msgid "Link"
 msgstr "Odkaz"
 
 #: includes/messages-ui.php:200
+#: includes/overview.php:83
 #@ organizational-message-notifier
 msgid "Create"
 msgstr "Vytvořit"
@@ -168,31 +178,37 @@ msgid "Unregister from WLS and delete log entries"
 msgstr "Odregistrovat z WLS a odstranit všechny záznamy"
 
 #: includes/message-table.php:12
+#: includes/overview-table.php:15
 #@ organizational-message-notifier
 msgid "message"
 msgstr "zpráva"
 
 #: includes/message-table.php:13
+#: includes/overview-table.php:16
 #@ organizational-message-notifier
 msgid "messages"
 msgstr "zprávy"
 
 #: includes/message-table.php:22
+#: includes/overview-table.php:25
 #@ organizational-message-notifier
 msgid "Message title"
 msgstr "Titulek zprávy"
 
 #: includes/message-table.php:25
+#: includes/overview-table.php:28
 #@ organizational-message-notifier
 msgid "Users who didn't read it yet"
 msgstr "Uživatelé, kteří zprávu dosud nepřečetli"
 
 #: includes/message-table.php:81
+#: includes/overview-table.php:95
 #@ organizational-message-notifier
 msgid "Delete"
 msgstr "Odstranit"
 
 #: includes/message-table.php:84
+#: includes/overview-table.php:98
 #@ organizational-message-notifier
 msgid "Expire"
 msgstr "Zneplatnit"
@@ -206,11 +222,13 @@ msgid "Organizational message management"
 msgstr "Správa OMN"
 
 #: includes/messages-ui.php:76
+#: includes/overview.php:118
 #@ organizational-message-notifier
 msgid "Message created."
 msgstr "Zpráva byla vytvořena."
 
 #: includes/messages-ui.php:78
+#: includes/overview.php:120
 #@ organizational-message-notifier
 msgid "Error while creating message."
 msgstr "Chyba při vytváření zprávy."
@@ -246,6 +264,7 @@ msgid "Error while deleting the message."
 msgstr "Chyba při odstraňování zprávy."
 
 #: includes/messages-ui.php:158
+#: includes/overview.php:71
 #@ organizational-message-notifier
 msgid "Target"
 msgstr "Cíl"
@@ -253,7 +272,7 @@ msgstr "Cíl"
 #: includes/messages-ui.php:193
 #@ organizational-message-notifier
 msgid "If the \"Specified users\" option is checked, enter their ID's separated by commas."
-msgstr "Pokud jste zvolili možnost \\\"specifičtí uživatelé\\\", zadejte jejich ID oddělená čárkami."
+msgstr "Pokud jste zvolili možnost 'specifičtí uživatelé', zadejte jejich ID oddělená čárkami."
 
 #: includes/messages-ui.php:222
 #@ organizational-message-notifier
@@ -295,10 +314,11 @@ msgstr "Základní nastavení"
 msgid "Default message target"
 msgstr "Výchozí cíl zprávy"
 
+#: includes/overview.php:78
 #: includes/settings-ui.php:155
 #@ organizational-message-notifier
 msgid "If the \"Specific users\" option is checked, enter their ID's separated by commas."
-msgstr "Pokud jste zvolili možnost \\\"specifičtí uživatelé\\\", zadejte jejich ID oddělená čárkami."
+msgstr "Pokud jste zvolili možnost 'specifičtí uživatelé', zadejte jejich ID oddělená čárkami."
 
 #: includes/settings-ui.php:156
 #@ organizational-message-notifier
@@ -313,12 +333,12 @@ msgstr "Specifičtí uživatelé"
 #: includes/settings-ui.php:168
 #@ organizational-message-notifier
 msgid "This has meaning only if default target is set to \"Specific users\"."
-msgstr "Toto má význam pouze pokud je výchozí cíl nastaven na \\\"specifičtí uživatelé\\\"."
+msgstr "Toto má význam pouze pokud je výchozí cíl nastaven na 'specifičtí uživatelé'."
 
 #: includes/settings-ui.php:180
 #@ organizational-message-notifier
 msgid "This has meaning only if default target is set to \"Users with specified role\"."
-msgstr "Toto má význam, pouze pokud je výchozí cíl nastaven na \\\"uživatelé s vybranou rolí\\\"."
+msgstr "Toto má význam, pouze pokud je výchozí cíl nastaven na 'uživatelé s vybranou rolí'."
 
 #: includes/settings-ui.php:187
 #@ organizational-message-notifier
@@ -393,6 +413,7 @@ msgstr "Předmět"
 msgid "Save"
 msgstr "Uložit"
 
+#: includes/overview.php:73
 #: includes/settings.php:99
 #@ organizational-message-notifier
 msgid "Administrators of currently active blogs"
@@ -403,6 +424,7 @@ msgstr "Administrátoři momentálně aktivních blogů"
 msgid "Administrators"
 msgstr "Administrátoři"
 
+#: includes/overview.php:74
 #: includes/settings.php:101
 #@ organizational-message-notifier
 msgid "Administrators of blogs (by admin e-mail address)"
@@ -418,6 +440,7 @@ msgstr "Uživatelé s vybranou rolí (na primárním blogu)"
 msgid "Users with specified role"
 msgstr "Uživatelé s vybranou rolí"
 
+#: includes/overview.php:75
 #: includes/settings.php:105
 #@ organizational-message-notifier
 msgid "All users in the network"
@@ -451,13 +474,13 @@ msgstr ""
 #: includes/messages-ui.php:194
 #@ organizational-message-notifier
 msgid "If the \"Users with specified role\" option is checked, enter valid user roles separated by commas."
-msgstr "Pokud je cíl nastaven na \\\"Uživatelé s vybranou rolí\\\", zadejte platné uživatelské role oddělené čárkami."
+msgstr "Pokud je cíl nastaven na 'Uživatelé s vybranou rolí', zadejte platné uživatelské role oddělené čárkami."
 
 #: includes/notification.php:33
 #, php-format
 #@ organizational-message-notifier
 msgid "%sYou have %d unread messages%s concerning website operation. For reading them continue, please, %shere%s."
-msgstr "%sMáte %d nepřečtených zpráv%d týkajících se provozu webu. Pro jejich přečtení, prosím, pokračujte %sna tento odkaz%s."
+msgstr "%sMáte %d nepřečtených zpráv%s týkajících se provozu webu. Pro jejich přečtení, prosím, pokračujte %sna tento odkaz%s."
 
 #: includes/settings-ui.php:173
 #@ organizational-message-notifier
@@ -469,4 +492,9 @@ msgstr "Cílové role"
 #@ organizational-message-notifier
 msgid "You can enter more roles separated by %s without spaces."
 msgstr "Můžete zadat více rolí oddělených %s bez mezer."
+
+#: includes/overview.php:76
+#@ organizational-message-notifier
+msgid "Specific users: "
+msgstr "Specifičtí uživatelé: "
 

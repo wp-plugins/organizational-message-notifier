@@ -14,7 +14,7 @@ namespace OrganizationalMessageNotifier\MessagesUI {
 	const PAGE_READING = "omn-reading";
 	
 	/* Admin menus */
-	add_action( "network_admin_menu", "\OrganizationalMessageNotifier\MessagesUI\network_admin_menu" );
+	add_action( "network_admin_menu", "\OrganizationalMessageNotifier\MessagesUI\\network_admin_menu" );
 	
 	
 	function network_admin_menu() {
