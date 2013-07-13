@@ -308,7 +308,7 @@ namespace OrganizationalMessageNotifier\MessagesUI {
 								<td>
 									<strong>
 									<?php
-										if( $show == 'unread' || target_exists( $message->id, get_current_user_id() ) ) {
+										if( $show == 'unread' || db\target_exists( $message->id, get_current_user_id() ) ) {
 											echo "<a href=\"index.php?page=" . PAGE_READING . "&action=read&id={$message->id}\">" . __( 'I have read it.', OMN_TXD ) . "</a>";
 										}
 									?>

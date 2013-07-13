@@ -2,7 +2,7 @@
 /*
 Plugin Name: Organizational message notifier
 Description: Allows network admin to send organizational messages to blog admins. Includes read confirmation.
-Version: 2.0.2
+Version: 2.0.3
 Author: Zaantar
 Donate link: http://zaantar.eu/financni-prispevek
 Author URI: http://zaantar.eu
@@ -29,15 +29,15 @@ License: GPL2
 
 
 namespace OrganizationalMessageNotifier {
-	
+
 	use \OrganizationalMessageNotifier\Database as db;
 	use \OrganizationalMessageNotifier\z;
-	
+
 	/* Assure that 'class-wp-list-table.php' is available. */
 	if(!class_exists('WP_List_Table')) {
 		require_once(ABSPATH . 'wp-admin/includes/class-wp-list-table.php');
 	}
-	
+
 	/* Include all neccessary plugin files */
 	$includes = array(
 			"database.php",
@@ -48,27 +48,27 @@ namespace OrganizationalMessageNotifier {
 			"settings-ui.php",
 			"settings.php",
 			"zan.php" );
-	
+
 	/* Include the files defined above */
 	foreach( $includes as $include ) {
 		require_once plugin_dir_path( __FILE__ ) . "includes/$include";
 	}
-	
-	
+
+
 	/* Installation */
 	register_activation_hook( __FILE__, "\OrganizationalMessageNotifier\install" );
-	
+
 	function install() {
 		db\create_tables();
 	}
-	
-	
+
+
 	/* I18N */
 	define( "OMN_TXD", "organizational-message-notifier" );
-	
+
 	add_action( 'init', "\OrganizationalMessageNotifier\load_plugin_textdomain" );
-	
-	
+
+
 	function load_plugin_textdomain() {
 		\load_plugin_textdomain( OMN_TXD, false, basename( dirname(__FILE__) ) . "/languages" );
 	}
